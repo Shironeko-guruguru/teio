@@ -16,7 +16,7 @@ const defaultGameData = {
 
 // --- 読み込むキャラクターファイルのリスト ---
 // 新しいキャラクターを追加する際は、ここにJSONファイル名を追加する
-const characterFiles = ['date/char001.json', 'char002.json', 'char003.json'];
+const characterFiles = ['char001.json', 'char002.json', 'char003.json'];
 
 
 // ===============================================
@@ -27,7 +27,7 @@ async function loadCharacterData() {
   const loadedCharacters = [];
   for (const file of characterFiles) {
     try {
-      const response = await fetch(`./data/${file}`);
+      const response = await fetch(`./date/${file}`);
       if (!response.ok) { // ファイルが存在しない場合などのエラーチェック
         throw new Error(`ファイルが見つかりません: ${file}`);
       }
