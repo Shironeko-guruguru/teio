@@ -342,4 +342,51 @@ main {
 .zukan-card ul li:nth-child(odd) {
   background-color: #f9f9f9;
 }
+
+/* ====== ボタン装飾の追加分 ====== */
+
+/* 詳細ボタン */
+.zukan-detail-btn {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.zukan-detail-btn:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* モーダルのコンテンツ */
+.modal-content {
+  position: relative;
+}
+
+/* 閉じるボタン */
+#zukan-modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #aaa;
+  cursor: pointer;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  transition: all 0.2s ease;
+}
+
+#zukan-modal-close-btn:hover {
+  color: #333;
+  transform: rotate(90deg);
 }
