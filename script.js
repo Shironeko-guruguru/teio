@@ -1,142 +1,33 @@
 // ===============================================
 // ▼▼▼ ゲームのデータ管理 ▼▼▼
 // ===============================================
+// (Step 1 で更新した player と characters のデータはここにペーストしてください)
+const player = { name: "ヒーロー", level: 1, gold: 100, materials: 10 };
+const characters = [ /* Step 1 の characters 配列 */ ];
+const tasks = [ /* 既存の tasks 配列 */ ];
 
-// --- プレイヤーデータ ---
-// ===============================================
-// ▼▼▼ ゲームのデータ管理 ▼▼▼
-// ===============================================
-
-// --- プレイヤーデータ ---
-const player = {
-  name: "ヒーロー",
-  level: 1,
-  gold: 100,
-  materials: 10 // 強化素材を10個持っている状態からスタート
-};
-
-// --- キャラクターデータ ---
-const characters = [
-  {
-    id: 'char001',
-    name: '剣士',
-    stars: 3,         // level を stars に変更
-    maxStars: 5,      // 星の最大数を追加
-    skills: ['スラッシュ'],
-    rankUpCost: 10    // levelUpCost を rankUpCost に変更し、コストを調整
-  },
-  {
-    id: 'char002',
-    name: '魔法使い',
-    stars: 2,
-    maxStars: 5,
-    skills: ['ファイアボール'],
-    rankUpCost: 15
-  }
-];
-
-// --- タスクデータ ---
-const tasks = [
-  {
-    id: 'task001',
-    text: 'スライムを10匹倒す',
-    completed: true // 達成済みかどうかのフラグ
-  },
-  {
-    id: 'task002',
-    text: 'ポーションを3個集める',
-    completed: false
-  },
-  {
-    id: 'task003',
-    text: 'デイリーログインボーナスを受け取る',
-    completed: false
-  }
-];
-
-
-
-// script.js の描画セクションの上あたりに追加
 
 // ===============================================
 // ▼▼▼ 画面の描画・更新処理 ▼▼▼
 // ===============================================
 
 // --- 星評価を生成するヘルパー関数 ---
-function generateStarRating(stars, maxStars) {
-  let starString = '';
-  for (let i = 0; i < maxStars; i++) {
-    starString += (i < stars) ? '★' : '☆';
-  }
-  return starString;
-}
+function generateStarRating(stars, maxStars) { /* 変更なし */ }
 
 // --- プレイヤーHUDの更新 ---
-function updatePlayerHUD() {
-  const levelElement = document.getElementById('player-level');
-  const nameElement = document.getElementById('player-name');
-  const materialsElement = document.getElementById('player-materials'); // ▼▼▼ 追加
+function updatePlayerHUD() { /* 変更なし */ }
 
-  levelElement.textContent = `Lv. ${player.level}`;
-  nameElement.textContent = player.name;
-  materialsElement.textContent = `強化素材: ${player.materials}`; // ▼▼▼ 追加
-}
-
-function renderTaskList() {
-  const taskListElement = document.getElementById('task-list');
-  taskListElement.innerHTML = ''; // 一旦リストを空にする
-
-  tasks.forEach(task => {
-    const listItem = document.createElement('li');
-    listItem.className = 'task-item';
-    if (task.completed) {
-      listItem.classList.add('completed');
-    }
-    
-    // タスクのテキスト部分
-    const textSpan = document.createElement('span');
-    textSpan.textContent = task.text;
-    
-    // 完了ボタン
-    const completeButton = document.createElement('button');
-    completeButton.textContent = '完了';
-    if (task.completed) {
-      completeButton.disabled = true; // 達成済みならボタンを押せなくする
-      completeButton.textContent = '達成済';
-    }
-
-    // ▼▼▼ ここからが新しい処理 ▼▼▼
-    // ボタンがクリックされた時の処理を追加
-    completeButton.addEventListener('click', () => {
-      // 1. どのタスクがクリックされたかIDで探す
-      const targetTask = tasks.find(t => t.id === task.id);
-      if (targetTask) {
-        // 2. 見つかったタスクのcompletedフラグをtrueに更新
-        targetTask.completed = true;
-        // 3. 画面を再描画して変更を反映する
-        renderTaskList();
-      }
-    });
-    // ▲▲▲ ここまでが新しい処理 ▲▲▲
-    
-    listItem.appendChild(textSpan);
-    listItem.appendChild(completeButton);
-    taskListElement.appendChild(listItem);
-  });
-}
-
-// script.js の renderKyokaPage 関数をまるごと差し替える
+// --- タスクリストの描画 ---
+function renderTaskList() { /* 変更なし */ }
 
 // --- 強化ページの描画 ---
 function renderKyokaPage() {
   const characterListElement = document.getElementById('character-list');
-  characterListElement.innerHTML = ''; // 一旦リストを空にする
+  characterListElement.innerHTML = ''; 
 
   characters.forEach(char => {
     const card = document.createElement('div');
     card.className = 'character-card';
-
-    // generateStarRating関数を使って星表示を生成
     const starDisplay = generateStarRating(char.stars, char.maxStars);
 
     card.innerHTML = `
@@ -144,7 +35,7 @@ function renderKyokaPage() {
         <span class="character-name">${char.name}</span>
         <span class="character-rank">${starDisplay}</span> 
       </div>
-      <p>スキル:</p>
+      <p>スキル: (SP: ${char.skillPoints})</p>
       <ul class="skill-list">
         ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
       </ul>
@@ -153,70 +44,94 @@ function renderKyokaPage() {
         <button data-char-id="${char.id}" class="skill-btn">スキル取得</button>
       </div>
     `;
-    
-    // --- クリック処理 ---
+
+    // --- ランクアップボタンの処理 (変更なし) ---
     const rankUpButton = card.querySelector('.rankup-btn');
+    // ... (ランクアップのロジックは省略) ...
 
-    // すでに最大ランクならボタンを押せなくする
-    if (char.stars >= char.maxStars) {
-      rankUpButton.textContent = 'MAX RANK';
-      rankUpButton.disabled = true;
-    }
-
-    rankUpButton.addEventListener('click', () => {
-      const targetChar = characters.find(c => c.id === char.id);
-      
-      if (targetChar.stars >= targetChar.maxStars) {
-        alert('これ以上ランクアップできません。');
-        return; // 処理を中断
-      }
-      
-      if (player.materials >= targetChar.rankUpCost) {
-        player.materials -= targetChar.rankUpCost;
-        targetChar.stars += 1;
-        
-        updatePlayerHUD();
-        renderKyokaPage();
-      } else {
-        alert('強化素材が足りません！');
-      }
+    // ★★★ スキル取得ボタンの処理 ★★★
+    const skillButton = card.querySelector('.skill-btn');
+    skillButton.addEventListener('click', () => {
+      openSkillModal(char.id); // キャラクターIDを渡してモーダルを開く
     });
-
+    
     characterListElement.appendChild(card);
   });
 }
 
 
 // ===============================================
-// ▼▼▼ ページ遷移の管理 ▼▼▼
+// ▼▼▼ スキル取得モーダルの管理 ▼▼▼
 // ===============================================
-const navButtons = document.querySelectorAll('.nav-button');
-const pages = document.querySelectorAll('.page');
+const skillModal = document.getElementById('skill-modal');
 
-function showPage(pageId) {
-  pages.forEach(page => page.classList.remove('active'));
-  navButtons.forEach(button => button.classList.remove('active'));
+// --- モーダルを開く ---
+function openSkillModal(characterId) {
+  const char = characters.find(c => c.id === characterId);
+  if (!char) return;
 
-  document.getElementById(pageId).classList.add('active');
-  document.querySelector(`.nav-button[data-page="${pageId}"]`).classList.add('active');
+  // モーダル内の要素を取得
+  const modalCharName = document.getElementById('modal-char-name');
+  const modalSkillPoints = document.getElementById('modal-skill-points');
+  const modalSkillList = document.getElementById('modal-skill-list');
+
+  // キャラクターの情報をモーダルに反映
+  modalCharName.textContent = char.name;
+  modalSkillPoints.textContent = char.skillPoints;
+  modalSkillList.innerHTML = ''; // リストを初期化
+
+  // 習得可能スキルをリスト表示
+  char.acquirableSkills.forEach(skill => {
+    // 既に習得済みかチェック
+    const isLearned = char.skills.includes(skill.name);
+    
+    const skillItem = document.createElement('div');
+    skillItem.className = 'modal-skill-item';
+    skillItem.innerHTML = `
+      <h4>${skill.name} (コスト: ${skill.cost})</h4>
+      <p>${skill.description}</p>
+      <button data-skill-id="${skill.id}">取得</button>
+    `;
+    
+    const acquireButton = skillItem.querySelector('button');
+    // スキルポイントが足りないか、既に習得済みならボタンを無効化
+    if (char.skillPoints < skill.cost || isLearned) {
+      acquireButton.disabled = true;
+      if(isLearned) acquireButton.textContent = '習得済';
+    }
+    
+    // 取得ボタンのクリック処理
+    acquireButton.addEventListener('click', () => {
+      // データの更新
+      char.skillPoints -= skill.cost;
+      char.skills.push(skill.name);
+      
+      // 画面の再描画
+      renderKyokaPage(); // カードの表示を更新
+      openSkillModal(characterId); // モーダルの中身も最新の状態に更新
+    });
+    
+    modalSkillList.appendChild(skillItem);
+  });
   
-  // ページが切り替わったタイミングで、そのページに必要な描画処理を呼び出す
-  if (pageId === 'task-page') {
-    renderTaskList();
-  } else if (pageId === 'kyoka-page') {
-    renderKyokaPage();
-  }
+  skillModal.classList.add('active'); // モーダルを表示
 }
 
-navButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    showPage(button.dataset.page);
-  });
-});
+// --- モーダルを閉じる ---
+function closeSkillModal() {
+  skillModal.classList.remove('active');
+}
+
+// 閉じるボタンにイベントを設定
+document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
 
 
 // ===============================================
-// ▼▼▼ ゲームの初期化処理 ▼▼▼
+// ▼▼▼ ページ遷移と初期化 ▼▼▼
 // ===============================================
+// (ページ遷移のコードは変更なし)
+const navButtons = document.querySelectorAll('.nav-button');
+// ...
+
 updatePlayerHUD();
-showPage('home-page'); // 最初に表示するページ
+showPage('home-page');
