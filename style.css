@@ -261,3 +261,40 @@ main {
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* style.cssの末尾に追加 */
+.save-buttons button {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 15px auto;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+#save-button {
+  background-color: #1e88e5; /* 青 */
+}
+#save-button:hover {
+  background-color: #1976d2;
+}
+
+#load-button {
+  background-color: #4caf50; /* 緑 */
+}
+#load-button:hover {
+  background-color: #45a049;
+}
+
+#delete-button {
+  background-color: #f44336; /* 赤 */
+}
+#delete-button:hover {
+  background-color: #d32f2f;
+}
