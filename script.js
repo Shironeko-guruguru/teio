@@ -1,84 +1,44 @@
 // ===============================================
 // ▼▼▼ ゲームのデータ管理 ▼▼▼
 // ===============================================
-// ゲームの全ての状態を保持する変数を `let` で宣言
 let player, characters, tasks;
 
 // --- 初期化用のデフォルトデータ ---
-// 起動時にセーブデータがない場合、このデータが使われる
 const defaultGameData = {
-  player: {
-    name: "ヒーロー",
-    level: 1,
-    gold: 100,
-    materials: 10
-  },
-  characters: [{
-    id: 'char001',
-    name: '剣士',
-    stars: 3,
-    maxStars: 5,
-    skillPoints: 5,
-    skills: ['スラッシュ'],
-    rankUpCost: 10,
-    acquirableSkills: [{
-      id: 'skill01',
-      name: 'パワースラッシュ',
-      cost: 3,
-      description: '通常より強力な斬撃を放つ。'
-    }, {
-      id: 'skill02',
-      name: 'ディフェンスアップ',
-      cost: 2,
-      description: '一定時間、防御力が上昇する。'
-    }, {
-      id: 'skill03',
-      name: 'ファーストエイド',
-      cost: 4,
-      description: '自身のHPを少し回復する。'
-    }]
-  }, {
-    id: 'char002',
-    name: '魔法使い',
-    stars: 2,
-    maxStars: 5,
-    skillPoints: 8,
-    skills: ['ファイアボール'],
-    rankUpCost: 15,
-    acquirableSkills: [{
-      id: 'skill04',
-      name: 'アイスランス',
-      cost: 3,
-      description: '氷の槍で敵を貫く。'
-    }, {
-      id: 'skill05',
-      name: 'マナシールド',
-      cost: 5,
-      description: '受けたダメージをMPで肩代わりする。'
-    }, {
-      id: 'skill06',
-      name: 'サンダーボルト',
-      cost: 5,
-      description: '雷を落とし、敵を麻痺させることがある。'
-    }]
-  }],
-  tasks: [{
-    id: 'task001',
-    text: 'スライムを10匹倒す',
-    completed: false,
-    reward: 5
-  }, {
-    id: 'task002',
-    text: 'ポーションを3個集める',
-    completed: false,
-    reward: 3
-  }, {
-    id: 'task003',
-    text: 'デイリーログインボーナスを受け取る',
-    completed: false,
-    reward: 10
-  }]
+  player: { name: "ヒーロー", level: 1, gold: 100, materials: 10 },
+  characters: [], // キャラクターデータは外部ファイルから読み込むため、ここは空にしておく
+  tasks: [
+    { id: 'task001', text: 'スライムを10匹倒す', completed: false, reward: 5 },
+    { id: 'task002', text: 'ポーションを3個集める', completed: false, reward: 3 },
+    { id: 'task003', text: 'デイリーログインボーナスを受け取る', completed: false, reward: 10 }
+  ]
 };
+
+// --- 読み込むキャラクターファイルのリスト ---
+// 新しいキャラクターを追加する際は、ここにJSONファイル名を追加する
+const characterFiles = ['char001.json', 'char002.json'];
+
+
+// ===============================================
+// ▼▼▼ データ読み込み処理 ▼▼▼
+// ===============================================
+// 指定されたキャラクターファイルを全て読み込む非同期関数
+async function loadCharacterData() {
+  const loadedCharacters = [];
+  for (const file of characterFiles) {
+    try {
+      const response = await fetch(`./data/${file}`);
+      if (!response.ok) { // ファイルが存在しない場合などのエラーチェック
+        throw new Error(`ファイルが見つかりません: ${file}`);
+      }
+      const data = await response.json();
+      loadedCharacters.push(data);
+    } catch (error) {
+      console.error('キャラクターデータの読み込みに失敗しました:', error);
+    }
+  }
+  return loadedCharacters;
+}
 
 
 // ===============================================
@@ -87,16 +47,13 @@ const defaultGameData = {
 const SAVE_KEY = 'myGameSaveData';
 
 function saveGame() {
-  const saveData = {
-    player: player,
-    characters: characters,
-    tasks: tasks
-  };
+  const saveData = { player: player, characters: characters, tasks: tasks };
   localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
   alert('ゲームデータを保存しました！');
 }
 
-function loadGame() {
+// キャラクターデータの読み込みと連携する非同期のロード関数
+async function loadGame() {
   const savedDataString = localStorage.getItem(SAVE_KEY);
   if (savedDataString) {
     const loadedData = JSON.parse(savedDataString);
@@ -105,10 +62,9 @@ function loadGame() {
     tasks = loadedData.tasks;
     console.log('セーブデータをロードしました。');
   } else {
-    // セーブデータがない場合は、デフォルトデータを深くコピーして使用
-    // JSONを介すことで、元の`defaultGameData`が変更されないようにする
+    // セーブデータがない場合は、ファイルから読み込んだデータで初期化
     player = JSON.parse(JSON.stringify(defaultGameData.player));
-    characters = JSON.parse(JSON.stringify(defaultGameData.characters));
+    characters = await loadCharacterData(); // ファイルから非同期で読み込む
     tasks = JSON.parse(JSON.stringify(defaultGameData.tasks));
     console.log('セーブデータがなかったので、新規にゲームを開始します。');
   }
@@ -126,35 +82,25 @@ function deleteSaveData() {
 // ▼▼▼ 画面の描画・更新処理 ▼▼▼
 // ===============================================
 
-// --- 星評価を生成するヘルパー関数 ---
 function generateStarRating(stars, maxStars) {
   let starString = '';
-  for (let i = 0; i < maxStars; i++) {
-    starString += (i < stars) ? '★' : '☆';
-  }
+  for (let i = 0; i < maxStars; i++) { starString += (i < stars) ? '★' : '☆'; }
   return starString;
 }
 
-// --- プレイヤーHUDの更新 ---
 function updatePlayerHUD() {
-  const levelElement = document.getElementById('player-level');
-  const nameElement = document.getElementById('player-name');
-  const materialsElement = document.getElementById('player-materials');
-  levelElement.textContent = `Lv. ${player.level}`;
-  nameElement.textContent = player.name;
-  materialsElement.textContent = `強化素材: ${player.materials}`;
+  document.getElementById('player-level').textContent = `Lv. ${player.level}`;
+  document.getElementById('player-name').textContent = player.name;
+  document.getElementById('player-materials').textContent = `強化素材: ${player.materials}`;
 }
 
-// --- タスクリストの描画 ---
 function renderTaskList() {
   const taskListElement = document.getElementById('task-list');
   taskListElement.innerHTML = '';
   tasks.forEach(task => {
     const listItem = document.createElement('li');
     listItem.className = 'task-item';
-    if (task.completed) {
-      listItem.classList.add('completed');
-    }
+    if (task.completed) { listItem.classList.add('completed'); }
     const textSpan = document.createElement('span');
     textSpan.textContent = `${task.text} (報酬: 素材x${task.reward})`;
     const completeButton = document.createElement('button');
@@ -178,7 +124,6 @@ function renderTaskList() {
   });
 }
 
-// --- 強化ページの描画 ---
 function renderKyokaPage() {
   const characterListElement = document.getElementById('character-list');
   characterListElement.innerHTML = '';
@@ -207,9 +152,7 @@ function renderKyokaPage() {
     }
     rankUpButton.addEventListener('click', () => {
       const targetChar = characters.find(c => c.id === char.id);
-      if (targetChar.stars >= targetChar.maxStars) {
-        return;
-      }
+      if (targetChar.stars >= targetChar.maxStars) return;
       if (player.materials >= targetChar.rankUpCost) {
         player.materials -= targetChar.rankUpCost;
         targetChar.stars += 1;
@@ -236,11 +179,9 @@ const skillModal = document.getElementById('skill-modal');
 function openSkillModal(characterId) {
   const char = characters.find(c => c.id === characterId);
   if (!char) return;
-  const modalCharName = document.getElementById('modal-char-name');
-  const modalSkillPoints = document.getElementById('modal-skill-points');
+  document.getElementById('modal-char-name').textContent = char.name;
+  document.getElementById('modal-skill-points').textContent = char.skillPoints;
   const modalSkillList = document.getElementById('modal-skill-list');
-  modalCharName.textContent = char.name;
-  modalSkillPoints.textContent = char.skillPoints;
   modalSkillList.innerHTML = '';
   char.acquirableSkills.forEach(skill => {
     const isLearned = char.skills.includes(skill.name);
@@ -296,10 +237,9 @@ navButtons.forEach(button => {
   });
 });
 
-// --- イベントリスナーの設定 ---
 document.getElementById('save-button').addEventListener('click', saveGame);
-document.getElementById('load-button').addEventListener('click', () => {
-  loadGame();
+document.getElementById('load-button').addEventListener('click', async () => {
+  await loadGame(); // ロード処理が非同期なので待つ
   updatePlayerHUD();
   const currentPageId = document.querySelector('.page.active').id;
   showPage(currentPageId);
@@ -310,8 +250,8 @@ document.getElementById('modal-close-btn').addEventListener('click', closeSkillM
 
 
 // --- ゲーム起動時のメイン処理 ---
-function initializeGame() {
-  loadGame(); // 1. まずセーブデータをロード (なければ新規データ)
+async function initializeGame() {
+  await loadGame(); // 1. 非同期でセーブデータ(またはファイル)をロード
   updatePlayerHUD(); // 2. HUDを更新
   showPage('home-page'); // 3. ホーム画面を表示
 }
