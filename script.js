@@ -58,7 +58,6 @@ const tasks = [
 // ===============================================
 
 // --- プレイヤーHUDの更新 ---
-// --- プレイヤーHUDの更新 ---
 function updatePlayerHUD() {
   const levelElement = document.getElementById('player-level');
   const nameElement = document.getElementById('player-name');
@@ -70,6 +69,65 @@ function updatePlayerHUD() {
 }
 
 // --- タスクリストの描画 ---
+function renderTaskList() {
+  const taskListElement = document.getElementById('task-list');
+  taskListElement.innerHTML = ''; // 一旦リストを空にする
+
+  tasks.forEach(task => {
+    const listItem = document.createElement('li');
+    listItem.className = 'task-item';
+    if (task.completed) {
+      listItem.classList.add('completed');
+    }
+    
+    // タスクのテキスト部分
+    const textSpan = document.createElement('span');
+    textSpan.textContent = task.text;
+    
+    // 完了ボタン
+    const completeButton = document.createElement('button');
+    completeButton.textContent = '完了';
+    if (task.completed) {
+      completeButton.disabled = true; // 達成済みならボタンを押せなくする
+      completeButton.textContent = '達成済';
+    }
+    
+    listItem.appendChild(textSpan);
+    listItem.appendChild(completeButton);
+    taskListElement.appendChild(listItem);
+  });
+}
+
+// --- 強化ページの描画 ---
+function renderKyokaPage() {
+  const characterListElement = document.getElementById('character-list');
+  characterListElement.innerHTML = ''; // 一旦リストを空にする
+
+  characters.forEach(char => {
+    // 1キャラ分のカードを作成
+    const card = document.createElement('div');
+    card.className = 'character-card';
+
+    // カードのHTMLの中身を `` (バッククォート) で一気に作成
+    card.innerHTML = `
+      <div class="character-header">
+        <span class="character-name">${char.name}</span>
+        <span class="character-level">Lv. ${char.level}</span>
+      </div>
+      <p>スキル:</p>
+      <ul class="skill-list">
+        ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
+      </ul>
+      <div class="action-buttons">
+        <button>レベルアップ</button>
+        <button>スキル取得</button>
+      </div>
+    `;
+    
+    characterListElement.appendChild(card);
+  });
+}
+
 // --- 強化ページの描画 ---
 function renderKyokaPage() {
   const characterListElement = document.getElementById('character-list');
