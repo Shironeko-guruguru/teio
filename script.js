@@ -266,6 +266,8 @@ function showPage(pageId) {
     renderTaskList();
   } else if (pageId === 'kyoka-page') {
     renderKyokaPage();
+  } else if (pageId === 'zukan-page') {
+    renderZukanPage();
   }
 }
 
