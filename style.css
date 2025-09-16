@@ -82,3 +82,17 @@ body {
 .nav-button.active {
   color: #1e88e5; /* テーマカラーの青 */
 }
+
+main {
+  padding: 20px;
+}
+
+/* ページ共通のスタイル */
+.page {
+  display: none; /* デフォルトでは全てのページを非表示にする */
+}
+
+/* 表示するページに適用するアクティブクラス */
+.page.active {
+  display: block; /* activeクラスがついたページだけ表示する */
+}

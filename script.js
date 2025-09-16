@@ -1,34 +1,53 @@
-// 1. プレイヤーのデータをオブジェクトとして一元管理
-// 今後、HPや所持金などもここに追加していくと便利です。
+// --- プレイヤーデータ管理 ---
 const player = {
   name: "ヒーロー",
   level: 1,
   gold: 0
 };
 
-// 2. 画面の表示を更新するための「関数」を用意
-// この関数を呼び出すだけで、いつでも画面を最新のデータに更新できます。
 function updatePlayerHUD() {
-  // HTMLからIDを使って要素を取得
   const levelElement = document.getElementById('player-level');
   const nameElement = document.getElementById('player-name');
-
-  // 取得した要素のテキストをプレイヤーのデータで書き換える
-  // `` (バッククォート) を使うと、文字と変数をスッキリ組み合わせられます。
   levelElement.textContent = `Lv. ${player.level}`;
   nameElement.textContent = player.name;
 }
 
+// --- ここからが新しいページ遷移の処理 ---
 
-// --- ここからが実際の処理 ---
+// 1. 必要な要素をまとめて取得
+const navButtons = document.querySelectorAll('.nav-button');
+const pages = document.querySelectorAll('.page');
 
-// 3. ゲームが読み込まれた時に、一度だけHUDの表示を更新する
-// これで、HTMLに書かれていた仮の表示が、JavaScriptのデータに置き換わります。
+// 2. ページを切り替えるための関数
+function showPage(pageId) {
+  // すべてのページを一旦非表示にし、ボタンのアクティブ状態も解除
+  pages.forEach(page => {
+    page.classList.remove('active');
+  });
+  navButtons.forEach(button => {
+    button.classList.remove('active');
+  });
+
+  // 指定されたIDのページだけを表示
+  const targetPage = document.getElementById(pageId);
+  targetPage.classList.add('active');
+  
+  // 対応するボタンをアクティブ状態にする
+  const targetButton = document.querySelector(`.nav-button[data-page="${pageId}"]`);
+  targetButton.classList.add('active');
+}
+
+// 3. 各ボタンにクリックイベントを設定
+navButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const targetPageId = button.dataset.page; // data-page属性の値を取得
+    showPage(targetPageId);
+  });
+});
+
+
+// --- 初期化処理 ---
+// 最初に表示するHUDの更新
 updatePlayerHUD();
-
-// (テスト用) 5秒後にレベルが上がる処理
-setTimeout(() => {
-  player.level = 2; // プレイヤーのレベルを2に更新
-  updatePlayerHUD(); // 再度HUD更新関数を呼び出して、画面に反映！
-  console.log('レベルが上がった！');
-}, 5000); // 5000ミリ秒 = 5秒
+// 最初に表示するページを指定（今回はホーム画面）
+showPage('home-page');

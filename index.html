@@ -12,15 +12,39 @@
   <link rel="apple-touch-icon" href="./images/icon-1280x1280.png" sizes="1028x1028">
 </head>
 <body>
-<header class="player-hud">
-  <span id="player-level"></span> <span id="player-name"></span> 
-</header>
+  <header class="player-hud">
+    <span id="player-level"></span>
+    <span id="player-name"></span>
+  </header>
+
+  <main>
+    <div id="kyoka-page" class="page">
+      <h1>強化ページ</h1>
+      <p>ここで装備やスキルを強化します。</p>
+    </div>
+    <div id="task-page" class="page">
+      <h1>タスクページ</h1>
+      <p>ここに今日のタスクが表示されます。</p>
+    </div>
+    <div id="home-page" class="page">
+      <h1>ホーム</h1>
+      <p>ようこそ！</p>
+    </div>
+    <div id="zukan-page" class="page">
+      <h1>図鑑ページ</h1>
+      <p>集めたキャラクターやアイテムが見られます。</p>
+    </div>
+    <div id="save-page" class="page">
+      <h1>保存ページ</h1>
+      <p>ゲームの進行状況を保存します。</p>
+    </div>
+  </main>
   <nav class="footer-nav">
-    <button class="nav-button">強化</button>
-    <button class="nav-button">タスク</button>
-    <button class="nav-button">ホーム</button>
-    <button class="nav-button">図鑑</button>
-    <button class="nav-button">保存</button>
+    <button class="nav-button" data-page="kyoka-page">強化</button>
+    <button class="nav-button" data-page="task-page">タスク</button>
+    <button class="nav-button" data-page="home-page">ホーム</button>
+    <button class="nav-button" data-page="zukan-page">図鑑</button>
+    <button class="nav-button" data-page="save-page">保存</button>
   </nav>
   <script src="script.js"></script>
 </body>
