@@ -1,58 +1,84 @@
-/* 既存のスタイルがあれば、その下に追記してください */
-
-/* 画面全体の設定 */
+/* --- 基本設定 --- */
 body {
-  margin: 0; /* ブラウザ標準の余白を消す */
-  padding-bottom: 60px; /* フッターメニュー分のスペースを確保 */
-}
-
-/* フッターナビゲーションのコンテナ */
-.footer-nav {
-  position: fixed; /* 画面に固定 */
-  bottom: 0;       /* 画面の一番下に配置 */
-  left: 0;
-  width: 100%;     /* 幅を画面全体に */
-  display: flex;   /* ボタンを横並びにする */
-  justify-content: space-around; /* ボタンを等間隔に配置 */
-  background-color: #333; /* 背景色（濃いグレー） */
-  padding: 10px 0; /* 上下の余白 */
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* ちょっとした影 */
-}
-
-/* 各ナビゲーションボタン */
-.nav-button {
-  background: none; /* ボタンの背景をなくす */
-  border: none;     /* ボタンの枠線をなくす */
-  color: white;     /* 文字色を白に */
-  font-size: 16px;  /* 文字サイズ */
-  cursor: pointer;  /* マウスカーソルを指の形に */
-  padding: 5px 10px;
-  border-radius: 5px; /* 角を少し丸める */
-  transition: background-color 0.3s; /* 背景色が変わるアニメーション */
-}
-
-/* ボタンにマウスが乗った時 or タップされた時 */
-.nav-button:hover, .nav-button:active {
-  background-color: #555; /* 少し明るいグレーに */
-}
-
-.player-hud {
-  position: fixed; /* 画面に固定する */
-  top: 10px;       /* 画面の上から10pxの位置 */
-  left: 10px;      /* 画面の左から10pxの位置 */
+  margin: 0;
+  padding-top: 60px; /* HUDの高さ分、コンテンツエリアを確保 */
+  padding-bottom: 60px; /* フッターメニューの高さ分、コンテンツエリアを確保 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; /* モダンなフォントを指定 */
   
-  background-color: rgba(0, 0, 0, 0.7); /* 少し透明な黒 */
-  color: white; /* 文字は白 */
-  padding: 8px 15px; /* 内側の余白 (上下8px, 左右15px) */
-  border-radius: 10px; /* 角を丸める */
-  z-index: 1000; /* 他の要素より手前に表示させる */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* 影をつけて立体感を出す */
-  font-family: sans-serif; /* シンプルなフォントに */
-  font-size: 16px;
-  font-weight: bold; /* 文字を太くする */
+  /* 色のテーマ */
+  background-color: #f0f8ff; /* 全体の背景色 (AliceBlue) */
+  color: #333; /* 基本の文字色 (濃いグレー) */
 }
 
-/* 名前とレベルの間のスペース */
+/* --- プレイヤー情報 (HUD) --- */
+.player-hud {
+  position: fixed;
+  top: 0; /* 画面上部に配置 */
+  left: 0;
+  width: 100%; /* 幅を画面全体に */
+  box-sizing: border-box; /* paddingを含めて幅100%にする */
+
+  background-color: #ffffff; /* 背景は白 */
+  color: #333; /* 文字は濃いグレー */
+  padding: 10px 20px;
+  z-index: 1000;
+  
+  /* デザインのアクセント */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* ほんのり影をつける */
+  border-bottom: 1px solid #e0e0e0; /* 薄い境界線 */
+  display: flex; /* 中の要素を横並びに */
+  align-items: center; /* 上下中央揃え */
+}
+
+.player-hud span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
 #player-name {
-  margin-left: 12px;
+  margin-left: 15px;
+}
+
+
+/* --- フッターナビゲーション --- */
+.footer-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  
+  background-color: #ffffff; /* 背景は白 */
+  padding: 5px 0;
+  z-index: 1000;
+
+  /* デザインのアクセント */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* 上側に影をつける */
+  border-top: 1px solid #e0e0e0; /* 薄い境界線 */
+}
+
+/* --- ナビゲーションボタン --- */
+.nav-button {
+  background: none;
+  border: none;
+  color: #555; /* 少し薄いグレー */
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out; /* なめらかな変化のアニメーション */
+  flex-grow: 1; /* ボタンが均等にスペースを埋める */
+}
+
+/* ボタンにマウスが乗った時のスタイル */
+.nav-button:hover {
+  background-color: #e3f2fd; /* とても薄い青 */
+  color: #0d47a1; /* 濃い青 */
+}
+
+/* 「現在地」を示すためのアクティブなボタンスタイル (後で使います) */
+.nav-button.active {
+  color: #1e88e5; /* テーマカラーの青 */
 }
