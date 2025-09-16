@@ -20,16 +20,18 @@ const characters = [
   {
     id: 'char001',
     name: '剣士',
-    level: 5,
+    stars: 3,         // level を stars に変更
+    maxStars: 5,      // 星の最大数を追加
     skills: ['スラッシュ'],
-    levelUpCost: 3 // レベルアップに素材が3つ必要
+    rankUpCost: 10    // levelUpCost を rankUpCost に変更し、コストを調整
   },
   {
     id: 'char002',
     name: '魔法使い',
-    level: 3,
+    stars: 2,
+    maxStars: 5,
     skills: ['ファイアボール'],
-    levelUpCost: 5 // レベルアップに素材が5つ必要
+    rankUpCost: 15
   }
 ];
 
@@ -53,9 +55,21 @@ const tasks = [
 ];
 
 
+
+// script.js の描画セクションの上あたりに追加
+
 // ===============================================
 // ▼▼▼ 画面の描画・更新処理 ▼▼▼
 // ===============================================
+
+// --- 星評価を生成するヘルパー関数 ---
+function generateStarRating(stars, maxStars) {
+  let starString = '';
+  for (let i = 0; i < maxStars; i++) {
+    starString += (i < stars) ? '★' : '☆';
+  }
+  return starString;
+}
 
 // --- プレイヤーHUDの更新 ---
 function updatePlayerHUD() {
@@ -111,6 +125,9 @@ function renderTaskList() {
   });
 }
 
+// script.js の renderKyokaPage 関数をまるごと差し替える
+
+// --- 強化ページの描画 ---
 function renderKyokaPage() {
   const characterListElement = document.getElementById('character-list');
   characterListElement.innerHTML = ''; // 一旦リストを空にする
@@ -119,44 +136,51 @@ function renderKyokaPage() {
     const card = document.createElement('div');
     card.className = 'character-card';
 
+    // generateStarRating関数を使って星表示を生成
+    const starDisplay = generateStarRating(char.stars, char.maxStars);
+
     card.innerHTML = `
       <div class="character-header">
         <span class="character-name">${char.name}</span>
-        <span class="character-level">Lv. ${char.level}</span>
+        <span class="character-rank">${starDisplay}</span> 
       </div>
       <p>スキル:</p>
       <ul class="skill-list">
         ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
       </ul>
       <div class="action-buttons">
-        <button data-char-id="${char.id}" class="levelup-btn">レベルアップ (コスト: ${char.levelUpCost})</button>
+        <button data-char-id="${char.id}" class="rankup-btn">ランクアップ (コスト: ${char.rankUpCost})</button>
         <button data-char-id="${char.id}" class="skill-btn">スキル取得</button>
       </div>
     `;
     
-    // ▼▼▼ ここからが新しい処理 ▼▼▼
-    // 作成したカードの中からレベルアップボタンを探して、クリック処理を追加
-    const levelUpButton = card.querySelector('.levelup-btn');
-    levelUpButton.addEventListener('click', () => {
-      // 1. どのキャラクターかIDで特定
+    // --- クリック処理 ---
+    const rankUpButton = card.querySelector('.rankup-btn');
+
+    // すでに最大ランクならボタンを押せなくする
+    if (char.stars >= char.maxStars) {
+      rankUpButton.textContent = 'MAX RANK';
+      rankUpButton.disabled = true;
+    }
+
+    rankUpButton.addEventListener('click', () => {
       const targetChar = characters.find(c => c.id === char.id);
       
-      // 2. 素材が足りているかチェック
-      if (player.materials >= targetChar.levelUpCost) {
-        // 3. 素材を消費し、レベルを上げる
-        player.materials -= targetChar.levelUpCost;
-        targetChar.level += 1;
+      if (targetChar.stars >= targetChar.maxStars) {
+        alert('これ以上ランクアップできません。');
+        return; // 処理を中断
+      }
+      
+      if (player.materials >= targetChar.rankUpCost) {
+        player.materials -= targetChar.rankUpCost;
+        targetChar.stars += 1;
         
-        // 4. 画面を再描画して変更を反映
-        updatePlayerHUD(); // HUDの素材数を更新
-        renderKyokaPage(); // 強化ページを再描画してレベルを更新
-        
+        updatePlayerHUD();
+        renderKyokaPage();
       } else {
-        // 素材が足りない場合
         alert('強化素材が足りません！');
       }
     });
-    // ▲▲▲ ここまでが新しい処理 ▲▲▲
 
     characterListElement.appendChild(card);
   });
