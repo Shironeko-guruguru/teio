@@ -111,37 +111,6 @@ function renderTaskList() {
   });
 }
 
-// --- 強化ページの描画 ---
-function renderKyokaPage() {
-  const characterListElement = document.getElementById('character-list');
-  characterListElement.innerHTML = ''; // 一旦リストを空にする
-
-  characters.forEach(char => {
-    // 1キャラ分のカードを作成
-    const card = document.createElement('div');
-    card.className = 'character-card';
-
-    // カードのHTMLの中身を `` (バッククォート) で一気に作成
-    card.innerHTML = `
-      <div class="character-header">
-        <span class="character-name">${char.name}</span>
-        <span class="character-level">Lv. ${char.level}</span>
-      </div>
-      <p>スキル:</p>
-      <ul class="skill-list">
-        ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
-      </ul>
-      <div class="action-buttons">
-        <button>レベルアップ</button>
-        <button>スキル取得</button>
-      </div>
-    `;
-    
-    characterListElement.appendChild(card);
-  });
-}
-
-// --- 強化ページの描画 ---
 function renderKyokaPage() {
   const characterListElement = document.getElementById('character-list');
   characterListElement.innerHTML = ''; // 一旦リストを空にする
@@ -189,36 +158,6 @@ function renderKyokaPage() {
     });
     // ▲▲▲ ここまでが新しい処理 ▲▲▲
 
-    characterListElement.appendChild(card);
-  });
-}
-
-// --- 強化ページの描画 ---
-function renderKyokaPage() {
-  const characterListElement = document.getElementById('character-list');
-  characterListElement.innerHTML = ''; // 一旦リストを空にする
-
-  characters.forEach(char => {
-    // 1キャラ分のカードを作成
-    const card = document.createElement('div');
-    card.className = 'character-card';
-
-    // カードのHTMLの中身を `` (バッククォート) で一気に作成
-    card.innerHTML = `
-      <div class="character-header">
-        <span class="character-name">${char.name}</span>
-        <span class="character-level">Lv. ${char.level}</span>
-      </div>
-      <p>スキル:</p>
-      <ul class="skill-list">
-        ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
-      </ul>
-      <div class="action-buttons">
-        <button>レベルアップ</button>
-        <button>スキル取得</button>
-      </div>
-    `;
-    
     characterListElement.appendChild(card);
   });
 }
