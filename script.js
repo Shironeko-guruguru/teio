@@ -15,20 +15,19 @@ const defaultGameData = {
 };
 
 // --- 読み込むキャラクターファイルのリスト ---
-// 新しいキャラクターを追加する際は、ここにJSONファイル名を追加する
 const characterFiles = ['char001.json', 'char002.json', 'char003.json'];
 
 
 // ===============================================
 // ▼▼▼ データ読み込み処理 ▼▼▼
 // ===============================================
-// 指定されたキャラクターファイルを全て読み込む非同期関数
 async function loadCharacterData() {
   const loadedCharacters = [];
   for (const file of characterFiles) {
     try {
-      const response = await fetch(`./date/${file}`);
-      if (!response.ok) { // ファイルが存在しない場合などのエラーチェック
+      // ★★★ 修正点1: フォルダ名を "date" から "data" に修正 ★★★
+      const response = await fetch(`./data/${file}`);
+      if (!response.ok) {
         throw new Error(`ファイルが見つかりません: ${file}`);
       }
       const data = await response.json();
@@ -52,7 +51,6 @@ function saveGame() {
   alert('ゲームデータを保存しました！');
 }
 
-// キャラクターデータの読み込みと連携する非同期のロード関数
 async function loadGame() {
   const savedDataString = localStorage.getItem(SAVE_KEY);
   if (savedDataString) {
@@ -62,9 +60,8 @@ async function loadGame() {
     tasks = loadedData.tasks;
     console.log('セーブデータをロードしました。');
   } else {
-    // セーブデータがない場合は、ファイルから読み込んだデータで初期化
     player = JSON.parse(JSON.stringify(defaultGameData.player));
-    characters = await loadCharacterData(); // ファイルから非同期で読み込む
+    characters = await loadCharacterData();
     tasks = JSON.parse(JSON.stringify(defaultGameData.tasks));
     console.log('セーブデータがなかったので、新規にゲームを開始します。');
   }
@@ -170,68 +167,97 @@ function renderKyokaPage() {
   });
 }
 
-// --- 図鑑ページの描画 (カードリスト形式) ---
 function renderZukanPage() {
   const zukanGridElement = document.getElementById('zukan-grid');
-  zukanGridElement.innerHTML = ''; // グリッドを初期化
-
+  zukanGridElement.innerHTML = '';
   characters.forEach(char => {
     const card = document.createElement('div');
     card.className = 'zukan-card';
     const starDisplay = generateStarRating(char.stars, char.maxStars);
-
     card.innerHTML = `
       <div class="character-name">${char.name}</div>
       <div class="character-rank">${starDisplay}</div>
       <button data-char-id="${char.id}" class="zukan-detail-btn">詳細</button>
     `;
-
-    // 詳細ボタンにクリックイベントを設定
     const detailButton = card.querySelector('.zukan-detail-btn');
     detailButton.addEventListener('click', () => {
-      openZukanDetailModal(char.id); // 詳細モーダルを開く
+      openZukanDetailModal(char.id);
     });
-
     zukanGridElement.appendChild(card);
   });
 }
+
+
+// ===============================================
+// ▼▼▼ スキル取得モーダルの管理 ▼▼▼
+// ===============================================
+// ★★★ 修正点2: このセクションの関数が抜けていたので復元 ★★★
+const skillModal = document.getElementById('skill-modal');
+
+function openSkillModal(characterId) {
+  const char = characters.find(c => c.id === characterId);
+  if (!char) return;
+  document.getElementById('modal-char-name').textContent = char.name;
+  document.getElementById('modal-skill-points').textContent = char.skillPoints;
+  const modalSkillList = document.getElementById('modal-skill-list');
+  modalSkillList.innerHTML = '';
+  char.acquirableSkills.forEach(skill => {
+    const isLearned = char.skills.includes(skill.name);
+    const skillItem = document.createElement('div');
+    skillItem.className = 'modal-skill-item';
+    skillItem.innerHTML = `
+      <h4>${skill.name} (コスト: ${skill.cost})</h4>
+      <p>${skill.description}</p>
+      <button data-skill-id="${skill.id}">取得</button>
+    `;
+    const acquireButton = skillItem.querySelector('button');
+    if (char.skillPoints < skill.cost || isLearned) {
+      acquireButton.disabled = true;
+      if (isLearned) acquireButton.textContent = '習得済';
+    }
+    acquireButton.addEventListener('click', () => {
+      char.skillPoints -= skill.cost;
+      char.skills.push(skill.name);
+      renderKyokaPage();
+      openSkillModal(characterId);
+    });
+    modalSkillList.appendChild(skillItem);
+  });
+  skillModal.classList.add('active');
+}
+
+function closeSkillModal() {
+  skillModal.classList.remove('active');
+}
+
 
 // ===============================================
 // ▼▼▼ 図鑑詳細モーダルの管理 ▼▼▼
 // ===============================================
 const zukanDetailModal = document.getElementById('zukan-detail-modal');
 
-// --- モーダルを開く ---
 function openZukanDetailModal(characterId) {
   const char = characters.find(c => c.id === characterId);
   if (!char) return;
-
   const modalHeader = document.getElementById('modal-zukan-header');
   const initialSkillsList = document.getElementById('modal-zukan-initial-skills');
   const acquirableSkillsList = document.getElementById('modal-zukan-acquirable-skills');
-
-  // ヘッダー部分を生成
   const starDisplay = generateStarRating(char.stars, char.maxStars);
   modalHeader.innerHTML = `
     <span class="character-name">${char.name}</span>
     <span class="character-rank">${starDisplay}</span>
   `;
-  
-  // 初期スキルリストを生成
   initialSkillsList.innerHTML = char.skills.map(skill => `<li>${skill}</li>`).join('');
-
-  // 習得可能スキルリストを生成
-  acquirableSkillsList.innerHTML = char.acquirableSkills.map(skill => 
+  acquirableSkillsList.innerHTML = char.acquirableSkills.map(skill =>
     `<li><strong>${skill.name}</strong> (コスト: ${skill.cost})<br><small>${skill.description}</small></li>`
   ).join('');
-
-  zukanDetailModal.classList.add('active'); // モーダルを表示
+  zukanDetailModal.classList.add('active');
 }
 
-// --- モーダルを閉じる ---
 function closeZukanDetailModal() {
   zukanDetailModal.classList.remove('active');
 }
+
 
 // ===============================================
 // ▼▼▼ ページ遷移と初期化 ▼▼▼
@@ -261,24 +287,23 @@ navButtons.forEach(button => {
 
 document.getElementById('save-button').addEventListener('click', saveGame);
 document.getElementById('load-button').addEventListener('click', async () => {
-  await loadGame(); // ロード処理が非同期なので待つ
+  await loadGame();
   updatePlayerHUD();
   const currentPageId = document.querySelector('.page.active').id;
   showPage(currentPageId);
   alert('データをロードしました！');
 });
 document.getElementById('delete-button').addEventListener('click', deleteSaveData);
-document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
-// ... 既存のイベントリスナー ...
-document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
-document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal); // <-- この行を追加
 
+// ★★★ 修正点3: イベントリスナーの重複を削除し、整理 ★★★
+document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
+document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal);
 
 // --- ゲーム起動時のメイン処理 ---
 async function initializeGame() {
-  await loadGame(); // 1. 非同期でセーブデータ(またはファイル)をロード
-  updatePlayerHUD(); // 2. HUDを更新
-  showPage('home-page'); // 3. ホーム画面を表示
+  await loadGame();
+  updatePlayerHUD();
+  showPage('home-page');
 }
 
 // ゲーム開始！
