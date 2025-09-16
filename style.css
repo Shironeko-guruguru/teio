@@ -1,271 +1,37 @@
-/* 基本設定 */
+/* 既存のスタイルがあれば、その下に追記してください */
+
+/* 画面全体の設定 */
 body {
-    margin: 0;
-    font-family: 'Noto Sans JP', sans-serif; /* 日本語に適したフォント */
-    background-color: #1a1a1a; /* 全体の背景色を暗めに */
-    color: #eee; /* 基本の文字色 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* 画面全体の高さ */
-    overflow: hidden; /* スクロールバーを非表示 */
+  margin: 0; /* ブラウザ標準の余白を消す */
+  padding-bottom: 60px; /* フッターメニュー分のスペースを確保 */
 }
 
-.container {
-    width: 100%;
-    max-width: 1024px; /* ゲーム画面の一般的な最大幅 */
-    aspect-ratio: 16 / 9; /* アスペクト比を16:9に固定 */
-    display: flex;
-    flex-direction: column;
-    border: 2px solid #555; /* フレーム */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: #333; /* コンテナの背景色 */
-    overflow: hidden; /* コンテナ内で画像がはみ出さないように */
+/* フッターナビゲーションのコンテナ */
+.footer-nav {
+  position: fixed; /* 画面に固定 */
+  bottom: 0;       /* 画面の一番下に配置 */
+  left: 0;
+  width: 100%;     /* 幅を画面全体に */
+  display: flex;   /* ボタンを横並びにする */
+  justify-content: space-around; /* ボタンを等間隔に配置 */
+  background-color: #333; /* 背景色（濃いグレー） */
+  padding: 10px 0; /* 上下の余白 */
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* ちょっとした影 */
 }
 
-/* ヘッダー */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #222;
-    padding: 10px 20px;
-    border-bottom: 1px solid #444;
-    position: relative;
-    z-index: 10;
+/* 各ナビゲーションボタン */
+.nav-button {
+  background: none; /* ボタンの背景をなくす */
+  border: none;     /* ボタンの枠線をなくす */
+  color: white;     /* 文字色を白に */
+  font-size: 16px;  /* 文字サイズ */
+  cursor: pointer;  /* マウスカーソルを指の形に */
+  padding: 5px 10px;
+  border-radius: 5px; /* 角を少し丸める */
+  transition: background-color 0.3s; /* 背景色が変わるアニメーション */
 }
 
-.header-left {
-    display: flex;
-    align-items: center;
-}
-
-.trainer-info {
-    display: flex;
-    align-items: center;
-    background-color: #444;
-    border: 1px solid #666;
-    border-radius: 30px;
-    padding: 5px 15px 5px 5px;
-}
-
-.trainer-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #aaa;
-    margin-right: 10px;
-    filter: grayscale(100%); /* モノクロ化 */
-}
-
-.trainer-text span {
-    display: block;
-    font-size: 0.8em;
-    line-height: 1.2;
-}
-
-.trainer-text .level {
-    font-weight: bold;
-    font-size: 1em;
-    color: #eee;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* アイテム間のスペース */
-}
-
-.resource-item {
-    display: flex;
-    align-items: center;
-    background-color: #444;
-    border: 1px solid #666;
-    border-radius: 5px;
-    padding: 3px 8px;
-    font-size: 0.85em;
-}
-
-.resource-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    filter: grayscale(100%); /* モノクロ化 */
-}
-
-.header-button {
-    background-color: #555;
-    color: #eee;
-    border: 1px solid #777;
-    border-radius: 5px;
-    padding: 8px 12px;
-    font-size: 0.85em;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-
-.header-button:hover {
-    background-color: #666;
-    border-color: #999;
-}
-
-/* メインコンテンツ */
-.main-content {
-    flex-grow: 1; /* 残りのスペースを全て占める */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    overflow: hidden; /* 画像がはみ出さないように */
-    background-color: #444; /* 画像がない場合の背景 */
-}
-
-.main-image-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 3px solid #666; /* メイン画像のフレーム */
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* 画像をコンテナに合わせてトリミング */
-    filter: grayscale(100%) brightness(0.9); /* モノクロ化と少し暗く */
-}
-
-.message-bubble {
-    position: absolute;
-    bottom: 20px; /* 位置調整 */
-    left: 20px; /* 位置調整 */
-    width: 60px;
-    height: 60px;
-    background-color: #444;
-    border: 2px solid #777;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-}
-
-.chat-icon {
-    width: 30px;
-    height: 30px;
-    filter: grayscale(100%);
-}
-
-/* フッター */
-.footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end; /* ボタンの下揃え */
-    background-color: #222;
-    padding: 10px 20px;
-    border-top: 1px solid #444;
-    position: relative;
-    z-index: 10;
-}
-
-.footer-button {
-    flex: 1; /* 等間隔に配置 */
-    max-width: 120px; /* ボタンの最大幅 */
-    background-color: #333;
-    color: #eee;
-    border: 2px solid #555;
-    border-radius: 8px;
-    padding: 10px 5px;
-    margin: 0 5px; /* ボタン間の余白 */
-    font-size: 0.8em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-
-.footer-button:hover {
-    background-color: #444;
-    border-color: #777;
-}
-
-.footer-button.active {
-    background-color: #555; /* アクティブなボタンの色 */
-    border-color: #aaa;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* アクティブ感を出す */
-}
-
-.button-icon {
-    width: 35px;
-    height: 35px;
-    margin-bottom: 5px;
-    filter: grayscale(100%); /* モノクロ化 */
-}
-
-.footer-right-buttons {
-    display: flex;
-    flex-direction: column; /* 縦に並べる */
-    gap: 8px; /* ボタン間のスペース */
-    margin-left: 20px; /* 左側のボタン群との距離 */
-}
-
-.footer-sub-button {
-    background-color: #333;
-    color: #eee;
-    border: 1px solid #555;
-    border-radius: 5px;
-    padding: 5px 10px;
-    font-size: 0.75em;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-}
-
-.footer-sub-button:hover {
-    background-color: #444;
-    border-color: #777;
-}
-
-.sub-button-icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    filter: grayscale(100%); /* モノクロ化 */
-}
-
-/* レスポンシブ対応（必要であれば） */
-@media (max-width: 768px) {
-    .header, .footer {
-        padding: 8px 10px;
-    }
-    .header-right {
-        gap: 8px;
-    }
-    .resource-item {
-        font-size: 0.75em;
-        padding: 2px 5px;
-    }
-    .header-button {
-        padding: 6px 10px;
-        font-size: 0.75em;
-    }
-    .footer-button {
-        font-size: 0.7em;
-        padding: 8px 3px;
-        margin: 0 3px;
-    }
-    .button-icon {
-        width: 30px;
-        height: 30px;
-    }
-    .footer-sub-button {
-        font-size: 0.65em;
-        padding: 4px 8px;
-    }
+/* ボタンにマウスが乗った時 or タップされた時 */
+.nav-button:hover, .nav-button:active {
+  background-color: #555; /* 少し明るいグレーに */
 }
