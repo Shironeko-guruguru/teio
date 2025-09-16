@@ -27,7 +27,7 @@ async function loadCharacterData() {
   const loadedCharacters = [];
   for (const file of characterFiles) {
     try {
-      const response = await fetch(`./date/${file}`);
+      const response = await fetch(`./data/${file}`);
       if (!response.ok) { // ファイルが存在しない場合などのエラーチェック
         throw new Error(`ファイルが見つかりません: ${file}`);
       }
