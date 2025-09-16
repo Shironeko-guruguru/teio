@@ -68,7 +68,6 @@ function updatePlayerHUD() {
   materialsElement.textContent = `強化素材: ${player.materials}`; // ▼▼▼ 追加
 }
 
-// --- タスクリストの描画 ---
 function renderTaskList() {
   const taskListElement = document.getElementById('task-list');
   taskListElement.innerHTML = ''; // 一旦リストを空にする
@@ -91,6 +90,20 @@ function renderTaskList() {
       completeButton.disabled = true; // 達成済みならボタンを押せなくする
       completeButton.textContent = '達成済';
     }
+
+    // ▼▼▼ ここからが新しい処理 ▼▼▼
+    // ボタンがクリックされた時の処理を追加
+    completeButton.addEventListener('click', () => {
+      // 1. どのタスクがクリックされたかIDで探す
+      const targetTask = tasks.find(t => t.id === task.id);
+      if (targetTask) {
+        // 2. 見つかったタスクのcompletedフラグをtrueに更新
+        targetTask.completed = true;
+        // 3. 画面を再描画して変更を反映する
+        renderTaskList();
+      }
+    });
+    // ▲▲▲ ここまでが新しい処理 ▲▲▲
     
     listItem.appendChild(textSpan);
     listItem.appendChild(completeButton);
