@@ -38,7 +38,7 @@
 
   <div id="zukan-page" class="page">
     <h1>図鑑ページ</h1>
-    <div id="zukan-list"></div>
+    <div id="zukan-grid"></div>
   </div>
 
   <div id="save-page" class="page">
@@ -65,6 +65,17 @@
       <div id="modal-skill-list">
         </div>
       <button id="modal-close-btn">閉じる</button>
+    </div>
+  </div>
+  <div id="zukan-detail-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div id="modal-zukan-header">
+        </div>
+      <h4>初期スキル</h4>
+      <ul id="modal-zukan-initial-skills"></ul>
+      <h4>習得可能スキル</h4>
+      <ul id="modal-zukan-acquirable-skills"></ul>
+      <button id="zukan-modal-close-btn">閉じる</button>
     </div>
   </div>
   <script src="script.js"></script>
