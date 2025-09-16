@@ -88,26 +88,46 @@ function updatePlayerHUD() {
 // --- タスクリストの描画 ---
 function renderTaskList() {
   const taskListElement = document.getElementById('task-list');
-  taskListElement.innerHTML = '';
+  taskListElement.innerHTML = ''; // 一旦リストを空にする
+
   tasks.forEach(task => {
     const listItem = document.createElement('li');
     listItem.className = 'task-item';
-    if (task.completed) { listItem.classList.add('completed'); }
+    if (task.completed) {
+      listItem.classList.add('completed');
+    }
+    
+    // タスクのテキストと報酬量を表示
     const textSpan = document.createElement('span');
-    textSpan.textContent = task.text;
+    textSpan.textContent = `${task.text} (報酬: 素材x${task.reward})`; // 報酬量を表示
+    
     const completeButton = document.createElement('button');
     completeButton.textContent = '完了';
     if (task.completed) {
       completeButton.disabled = true;
       completeButton.textContent = '達成済';
     }
+    
+    // ▼▼▼ 完了ボタンのクリック処理を更新 ▼▼▼
     completeButton.addEventListener('click', () => {
       const targetTask = tasks.find(t => t.id === task.id);
-      if (targetTask) {
+      
+      // まだ完了していないタスクの場合のみ処理
+      if (targetTask && !targetTask.completed) {
+        // 1. 報酬をプレイヤーの所持素材に加算
+        player.materials += targetTask.reward;
+        console.log(`報酬として強化素材を${targetTask.reward}個獲得！`); // ログに表示
+
+        // 2. タスクを完了状態にする
         targetTask.completed = true;
-        renderTaskList();
+        
+        // 3. 画面を再描画して変更を反映
+        updatePlayerHUD(); // HUDの素材数を更新
+        renderTaskList();  // タスクリストを再描画
       }
     });
+    // ▲▲▲ ここまで更新 ▲▲▲
+    
     listItem.appendChild(textSpan);
     listItem.appendChild(completeButton);
     taskListElement.appendChild(listItem);
