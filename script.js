@@ -16,7 +16,7 @@ const defaultGameData = {
 
 // --- 読み込むキャラクターファイルのリスト ---
 // 新しいキャラクターを追加する際は、ここにJSONファイル名を追加する
-const characterFiles = ['char001.json', 'char002.json'];
+const characterFiles = ['char001.json', 'char002.json', 'char003.json'];
 
 
 // ===============================================
