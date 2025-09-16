@@ -41,9 +41,24 @@ const characters = [
 ];
 
 const tasks = [
-  { id: 'task001', text: 'スライムを10匹倒す', completed: true },
-  { id: 'task002', text: 'ポーションを3個集める', completed: false },
-  { id: 'task003', text: 'デイリーログインボーナスを受け取る', completed: false }
+  {
+    id: 'task001',
+    text: 'スライムを10匹倒す',
+    completed: false,
+    reward: 5 // ★★★ 報酬を追加
+  },
+  {
+    id: 'task002',
+    text: 'ポーションを3個集める',
+    completed: false,
+    reward: 3 // ★★★ 報酬を追加
+  },
+  {
+    id: 'task003',
+    text: 'デイリーログインボーナスを受け取る',
+    completed: false,
+    reward: 10 // ★★★ 報酬を追加
+  }
 ];
 
 
