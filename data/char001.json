@@ -1,0 +1,14 @@
+{
+  "id": "char001",
+  "name": "剣士",
+  "stars": 3,
+  "maxStars": 5,
+  "skillPoints": 5,
+  "skills": ["スラッシュ"],
+  "rankUpCost": 10,
+  "acquirableSkills": [
+    { "id": "skill01", "name": "パワースラッシュ", "cost": 3, "description": "通常より強力な斬撃を放つ。" },
+    { "id": "skill02", "name": "ディフェンスアップ", "cost": 2, "description": "一定時間、防御力が上昇する。" },
+    { "id": "skill03", "name": "ファーストエイド", "cost": 4, "description": "自身のHPを少し回復する。" }
+  ]
+}
