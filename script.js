@@ -171,44 +171,31 @@ function renderKyokaPage() {
 }
 
 // script.js の描画処理セクションに追加
-
-// --- 図鑑ページの描画 ---
+// --- 図鑑ページの描画 (カードリスト形式) ---
 function renderZukanPage() {
-  const zukanListElement = document.getElementById('zukan-list');
-  zukanListElement.innerHTML = ''; // リストを初期化
+  const zukanGridElement = document.getElementById('zukan-grid');
+  zukanGridElement.innerHTML = ''; // グリッドを初期化
 
-  // characters配列から全キャラクターの情報を描画
   characters.forEach(char => {
     const card = document.createElement('div');
     card.className = 'zukan-card';
     const starDisplay = generateStarRating(char.stars, char.maxStars);
 
-    // 習得可能スキルリストのHTMLを生成
-    const acquirableSkillsHtml = char.acquirableSkills.map(skill => 
-      `<li><strong>${skill.name}</strong> (コスト: ${skill.cost})<br><small>${skill.description}</small></li>`
-    ).join('');
-
     card.innerHTML = `
-      <div class="character-header">
-        <span class="character-name">${char.name}</span>
-        <span class="character-rank">${starDisplay}</span>
-      </div>
-      
-      <h4>所持スキル</h4>
-      <ul>
-        ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
-      </ul>
-
-      <h4>習得可能スキル</h4>
-      <ul>
-        ${acquirableSkillsHtml}
-      </ul>
+      <div class="character-name">${char.name}</div>
+      <div class="character-rank">${starDisplay}</div>
+      <button data-char-id="${char.id}" class="zukan-detail-btn">詳細</button>
     `;
 
-    zukanListElement.appendChild(card);
+    // 詳細ボタンにクリックイベントを設定
+    const detailButton = card.querySelector('.zukan-detail-btn');
+    detailButton.addEventListener('click', () => {
+      openZukanDetailModal(char.id); // 詳細モーダルを開く
+    });
+
+    zukanGridElement.appendChild(card);
   });
 }
-
 // ===============================================
 // ▼▼▼ スキル取得モーダルの管理 ▼▼▼
 // ===============================================
@@ -250,6 +237,42 @@ function closeSkillModal() {
   skillModal.classList.remove('active');
 }
 
+// ===============================================
+// ▼▼▼ 図鑑詳細モーダルの管理 ▼▼▼
+// ===============================================
+const zukanDetailModal = document.getElementById('zukan-detail-modal');
+
+// --- モーダルを開く ---
+function openZukanDetailModal(characterId) {
+  const char = characters.find(c => c.id === characterId);
+  if (!char) return;
+
+  const modalHeader = document.getElementById('modal-zukan-header');
+  const initialSkillsList = document.getElementById('modal-zukan-initial-skills');
+  const acquirableSkillsList = document.getElementById('modal-zukan-acquirable-skills');
+
+  // ヘッダー部分を生成
+  const starDisplay = generateStarRating(char.stars, char.maxStars);
+  modalHeader.innerHTML = `
+    <span class="character-name">${char.name}</span>
+    <span class="character-rank">${starDisplay}</span>
+  `;
+  
+  // 初期スキルリストを生成
+  initialSkillsList.innerHTML = char.skills.map(skill => `<li>${skill}</li>`).join('');
+
+  // 習得可能スキルリストを生成
+  acquirableSkillsList.innerHTML = char.acquirableSkills.map(skill => 
+    `<li><strong>${skill.name}</strong> (コスト: ${skill.cost})<br><small>${skill.description}</small></li>`
+  ).join('');
+
+  zukanDetailModal.classList.add('active'); // モーダルを表示
+}
+
+// --- モーダルを閉じる ---
+function closeZukanDetailModal() {
+  zukanDetailModal.classList.remove('active');
+}
 
 // ===============================================
 // ▼▼▼ ページ遷移と初期化 ▼▼▼
@@ -287,6 +310,9 @@ document.getElementById('load-button').addEventListener('click', async () => {
 });
 document.getElementById('delete-button').addEventListener('click', deleteSaveData);
 document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
+// ... 既存のイベントリスナー ...
+document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
+document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal); // <-- この行を追加
 
 
 // --- ゲーム起動時のメイン処理 ---
