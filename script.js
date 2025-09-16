@@ -170,6 +170,44 @@ function renderKyokaPage() {
   });
 }
 
+// script.js の描画処理セクションに追加
+
+// --- 図鑑ページの描画 ---
+function renderZukanPage() {
+  const zukanListElement = document.getElementById('zukan-list');
+  zukanListElement.innerHTML = ''; // リストを初期化
+
+  // characters配列から全キャラクターの情報を描画
+  characters.forEach(char => {
+    const card = document.createElement('div');
+    card.className = 'zukan-card';
+    const starDisplay = generateStarRating(char.stars, char.maxStars);
+
+    // 習得可能スキルリストのHTMLを生成
+    const acquirableSkillsHtml = char.acquirableSkills.map(skill => 
+      `<li><strong>${skill.name}</strong> (コスト: ${skill.cost})<br><small>${skill.description}</small></li>`
+    ).join('');
+
+    card.innerHTML = `
+      <div class="character-header">
+        <span class="character-name">${char.name}</span>
+        <span class="character-rank">${starDisplay}</span>
+      </div>
+      
+      <h4>初期スキル</h4>
+      <ul>
+        ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
+      </ul>
+
+      <h4>習得可能スキル</h4>
+      <ul>
+        ${acquirableSkillsHtml}
+      </ul>
+    `;
+
+    zukanListElement.appendChild(card);
+  });
+}
 
 // ===============================================
 // ▼▼▼ スキル取得モーダルの管理 ▼▼▼
