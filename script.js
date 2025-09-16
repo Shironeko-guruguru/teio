@@ -194,7 +194,7 @@ function renderZukanPage() {
         <span class="character-rank">${starDisplay}</span>
       </div>
       
-      <h4>初期スキル</h4>
+      <h4>所持スキル</h4>
       <ul>
         ${char.skills.map(skill => `<li>${skill}</li>`).join('')}
       </ul>
