@@ -310,8 +310,6 @@ document.getElementById('load-button').addEventListener('click', async () => {
 });
 document.getElementById('delete-button').addEventListener('click', deleteSaveData);
 document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
-// ... 既存のイベントリスナー ...
-document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
 document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal); // <-- この行を追加
 
 
