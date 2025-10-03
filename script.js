@@ -310,7 +310,8 @@ document.getElementById('load-button').addEventListener('click', async () => {
 });
 document.getElementById('delete-button').addEventListener('click', deleteSaveData);
 document.getElementById('modal-close-btn').addEventListener('click', closeSkillModal);
-document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal); // <-- この行を追加
+document.getElementById('zukan-modal-close-btn').addEventListener('click', closeZukanDetailModal);
+document.getElementById('home-sortie-button').addEventListener('click', () => {showPage('battle-select-page');});
 
 
 // --- ゲーム起動時のメイン処理 ---

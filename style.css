@@ -450,3 +450,30 @@ main {
   font-size: 1.1em;
   cursor: pointer;
 }
+
+/* style.css */
+
+/* --- ホーム画面のメニュー --- */
+.home-menu {
+  margin-top: 40px; /* 上のテキストとの間隔 */
+  text-align: center; /* ボタンを中央揃えにする */
+}
+
+.large-button {
+  padding: 20px 40px;
+  font-size: 1.5em; /* 文字を大きく */
+  font-weight: bold;
+  color: white;
+  background-color: #f44336; /* 目立つ赤色 */
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.large-button:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px); /* 少し浮き上がるエフェクト */
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
