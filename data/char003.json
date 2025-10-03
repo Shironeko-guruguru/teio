@@ -7,8 +7,31 @@
   "skills": ["ダブルショット"],
   "rankUpCost": 8,
   "acquirableSkills": [
-    { "id": "skill07", "name": "ポイズンアロー", "cost": 4, "description": "敵を毒状態にすることがある矢を放つ。" },
-    { "id": "skill08", "name": "シャープアイ", "cost": 3, "description": "一定時間、自身のクリティカル率を上げる。" },
-    { "id": "skill09", "name": "アローストーム", "cost": 6, "description": "空から矢の雨を降らせ、範囲内の敵にダメージを与える。" }
-  ]
+    { "id": "skill07", "name": "ポイズンアロー", "cost": 4, "description": "敵を毒状態にすることがある矢を放つ。" ,
+      "effect": {
+        "target": "SingleEnemy",
+        "type": "acid",
+        "power": 30 ,
+        "mp": 10
+      }},
+    { "id": "skill08", "name": "シャープアイ", "cost": 3, "description": "一定時間、自身のクリティカル率を上げる。" ,
+      "effect": {
+        "target": "SingleAlly",
+        "type": "CrtBuff",
+        "power": 30 ,
+        "mp": 10
+      }},
+    { "id": "skill09", "name": "アローストーム", "cost": 6, "description": "空から矢の雨を降らせ、範囲内の敵にダメージを与える。" ,
+      "effect": {
+        "target": "AllEnemy",
+        "type": "normal",
+        "power": 30 ,
+        "mp": 10
+      }}
+  ],
+  "stats": {
+    "hp": 100,
+    "atk": 20,
+    "def": 10
+  }
 }

@@ -7,8 +7,29 @@
   "skills": ["ファイアボール"],
   "rankUpCost": 15,
   "acquirableSkills": [
-    { "id": "skill04", "name": "アイスランス", "cost": 3, "description": "氷の槍で敵を貫く。" },
-    { "id": "skill05", "name": "マナシールド", "cost": 5, "description": "受けたダメージをMPで肩代わりする。" },
-    { "id": "skill06", "name": "サンダーボルト", "cost": 5, "description": "雷を落とし、敵を麻痺させることがある。" }
-  ]
+    { "id": "skill04", "name": "アイスランス", "cost": 3, "description": "氷の槍で敵を貫く。" ,
+      "effect": {
+        "target": "SingleAlly",
+        "type": "normal",
+        "power": 30 ,
+        "mp": 10
+      }},
+    { "id": "skill05", "name": "マナシールド", "cost": 5, "description": "受けたダメージをMPで肩代わりする。" ,
+      "effect": {
+        "target": "SingleAlly",
+        "type": "Special",
+        "power": 30 
+      }},
+    { "id": "skill06", "name": "サンダーボルト", "cost": 5, "description": "雷を落とし、敵を麻痺させることがある。" ,
+      "effect": {
+        "target": "AllEnemy",
+        "type": "Thunder",
+        "power": 30 
+      }}
+  ],
+  "stats": {
+    "hp": 100,
+    "atk": 20,
+    "def": 10
+  }
 }
