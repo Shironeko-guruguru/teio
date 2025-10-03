@@ -1,1 +1,26 @@
-
+[
+  {
+    "id": "enemy001",
+    "name": "スライム",
+    "stats": {
+      "hp": 50,
+      "atk": 10,
+      "def": 5
+    },
+    "reward": {
+      "materials": 2
+    }
+  },
+  {
+    "id": "enemy002",
+    "name": "ゴブリン",
+    "stats": {
+      "hp": 80,
+      "atk": 15,
+      "def": 8
+    },
+    "reward": {
+      "materials": 5
+    }
+  }
+]
